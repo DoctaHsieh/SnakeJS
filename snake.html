@@ -1,4 +1,4 @@
-<canvas id="game" width= "600" height= "600"></canvas>
+<canvas id="game" width= "400" height= "400"></canvas>
 
 <script>
     window.onload = function(){
@@ -14,15 +14,18 @@
     y_vel = 0;
 
     grid_size = 20;
-    tile_count = 30;
+    tile_count = 20;
 
     apple_x = 15;
     apple_y = 15;
 
     trail = [];
     tail_length = 5;
+    score= 0;
 
     function game_function(){
+        
+    
         x_pos = x_pos + x_vel;
         y_pos = y_pos + y_vel;
         // Keeps the snake on board, sends snake to other side if it hits a border
@@ -42,6 +45,7 @@
         // canvas coloring
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+       
         // snake coloring
         ctx.fillStyle = "#add8e6";
         // check each segment of the snake
@@ -49,6 +53,7 @@
             ctx.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size - 2, grid_size - 2);
             if (trail[i].x == x_pos && trail[i].y == y_pos){
                 tail_length = 5;
+                score = 0;
             }
         }   
         // creates snake trail
@@ -60,11 +65,15 @@
         }
         if(apple_x == x_pos && apple_y == y_pos){
             tail_length++;
+            score++;
             apple_x = Math.floor(Math.random()*tile_count);
             apple_y = Math.floor(Math.random()*tile_count);
         }
         ctx.fillStyle = "#FFD700";
         ctx.fillRect(apple_x*grid_size, apple_y * grid_size, grid_size -2, grid_size -2);
+        ctx.fillStyle = "white";
+        ctx.fillStyle = "24px Verdana"
+        ctx.fillText("Score: " + score, canvas.width -50, 10);
     }
     function keyPush(event){
         switch(event.keyCode){
@@ -91,4 +100,7 @@
         }
 
     }
+    
+        
+    
 </script>
