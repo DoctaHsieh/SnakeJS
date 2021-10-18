@@ -1,0 +1,85 @@
+<canvas id="game" width= "400" height= "400"></canvas>
+
+<script>
+    window.onload = function(){
+        canvas = document.getElementById("game");
+        ctx = canvas.getContext("2d");
+        document.addEventListener("keydown", keyPush);
+        setInterval(game_function, 1000/15);
+    }
+    x_pos = 10;
+    y_pos = 10;
+
+    x_vel = 0;
+    y_vel = 0;
+
+    grid_size = 20;
+    tile_count = 20;
+
+    apple_x = 15;
+    apple_y = 15;
+
+    trail = [];
+    tail_length = 5;
+
+    function game_function(){
+        x_pos = x_pos + x_vel;
+        y_pos = y_pos + y_vel;
+        // Keeps the snake on board, sends snake to other side if it hits a border
+        if(x_pos< 0){
+            x_pos = tile_count - 1;
+        }
+        if(y_pos< 0){
+            y_pos = tile_count - 1;
+        }
+
+        if(x_pos > tile_count - 1){
+            x_pos = 0;
+        }
+        if(y_pos > tile_count - 1){
+            y_pos = 0;
+        }
+        // canvas coloring
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // snake coloring
+        ctx.fillStyle = "lime";
+        // check each segment of the snake
+        for (var i = 0; i< trail.length; i++){
+            ctx.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size - 2, grid_size - 2);
+            
+        }   
+        // creates snake trail
+        // add new snake tiles
+        trail.push({x:x_pos, y:y_pos});
+        
+        while(trail.length > tail_length){
+            trail.shift();
+        }
+    }
+    function keyPush(event){
+        switch(event.keyCode){
+           
+            case 37://left
+                x_vel = -1;
+                y_vel = 0;
+                break;
+
+            case 38: //up
+                x_vel = 0;
+                y_vel = -1;
+                break;
+            
+            case 39://right
+                x_vel = 1;
+                y_vel = 0;
+                break;
+
+            case 40://down
+                x_vel = 0;
+                y_vel = 1;
+                break;
+        }
+
+    }
+</script>
