@@ -1,4 +1,4 @@
-<canvas id="game" width= "400" height= "400"></canvas>
+<canvas id="game" width= "600" height= "600"></canvas>
 
 <script>
     window.onload = function(){
@@ -14,7 +14,7 @@
     y_vel = 0;
 
     grid_size = 20;
-    tile_count = 20;
+    tile_count = 30;
 
     apple_x = 15;
     apple_y = 15;
@@ -43,11 +43,13 @@
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // snake coloring
-        ctx.fillStyle = "lime";
+        ctx.fillStyle = "#add8e6";
         // check each segment of the snake
         for (var i = 0; i< trail.length; i++){
             ctx.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size - 2, grid_size - 2);
-            
+            if (trail[i].x == x_pos && trail[i].y == y_pos){
+                tail_length = 5;
+            }
         }   
         // creates snake trail
         // add new snake tiles
@@ -56,6 +58,13 @@
         while(trail.length > tail_length){
             trail.shift();
         }
+        if(apple_x == x_pos && apple_y == y_pos){
+            tail_length++;
+            apple_x = Math.floor(Math.random()*tile_count);
+            apple_y = Math.floor(Math.random()*tile_count);
+        }
+        ctx.fillStyle = "#FFD700";
+        ctx.fillRect(apple_x*grid_size, apple_y * grid_size, grid_size -2, grid_size -2);
     }
     function keyPush(event){
         switch(event.keyCode){
