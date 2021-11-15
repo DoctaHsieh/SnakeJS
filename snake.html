@@ -1,80 +1,110 @@
 <canvas id="game" width= "400" height= "400"></canvas>
-
+<head>
+    <meta charset="utf-8" />
+    <title>Snake</title>
+</head>
 <script>
-    window.onload = function(){
+        //11/14 Evan Hsieh: Added head
+        //11/14 Evan Hsieh: Added WallCollision and GameOver functions
+        //11/14 Evan Hsieh: cleaned up code
+        //11/14 Added lives increment variation and a game win condition
+        //11/14 Evan Hsieh: created appleCollision function
+        window.onload = function(){
         canvas = document.getElementById("game");
         ctx = canvas.getContext("2d");
         document.addEventListener("keydown", keyPush);
         setInterval(game_function, 1000/15);
     }
-    x_pos = 10;
-    y_pos = 10;
+    var x_pos = 10;
+    var y_pos = 10;
 
-    x_vel = 0;
-    y_vel = 0;
+    var x_vel = 0;
+    var y_vel = 0;
 
-    grid_size = 20;
-    tile_count = 20;
+    var grid_size = 20;
+    var tile_count = 20;
 
-    apple_x = 15;
-    apple_y = 15;
+    var apple_x = 15;
+    var apple_y = 15;
 
-    trail = [];
-    tail_length = 5;
-    score= 0;
+    var trail = [];
+    var tail_length = 5;
+    var score= 0;
+    var lives = 3;
 
     function game_function(){
-        
-    
         x_pos = x_pos + x_vel;
         y_pos = y_pos + y_vel;
-        // Keeps the snake on board, sends snake to other side if it hits a border
-        if(x_pos< 0){
-            x_pos = tile_count - 1;
+        // Snake collision conditions all together in one if statement, calls Respawn
+        if(x_pos< 0 || y_pos< 0 || x_pos > tile_count - 1 || y_pos > tile_count - 1){
+            WallCollision();
         }
-        if(y_pos< 0){
-            y_pos = tile_count - 1;
-        }
-
-        if(x_pos > tile_count - 1){
-            x_pos = 0;
-        }
-        if(y_pos > tile_count - 1){
-            y_pos = 0;
-        }
-        // canvas coloring
+                
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
        
-        // snake coloring
         ctx.fillStyle = "#add8e6";
-        // check each segment of the snake
+      
         for (var i = 0; i< trail.length; i++){
             ctx.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size - 2, grid_size - 2);
             if (trail[i].x == x_pos && trail[i].y == y_pos){
                 tail_length = 5;
                 score = 0;
             }
-        }   
-        // creates snake trail
-        // add new snake tiles
+        } 
+        if (score == 10 || score == 20 || score == 30 || score == 40)  {
+            lives++;
+        }else if (score == 50){ 
+            alert("Congrats! You won, and you still had " + lives + " lives left!");
+            document.location.reload();
+        }
+    
         trail.push({x:x_pos, y:y_pos});
         
         while(trail.length > tail_length){
             trail.shift();
         }
         if(apple_x == x_pos && apple_y == y_pos){
-            tail_length++;
-            score++;
-            apple_x = Math.floor(Math.random()*tile_count);
-            apple_y = Math.floor(Math.random()*tile_count);
+            AppleCollision();
         }
+
+        
         ctx.fillStyle = "#FFD700";
         ctx.fillRect(apple_x*grid_size, apple_y * grid_size, grid_size -2, grid_size -2);
         ctx.fillStyle = "white";
         ctx.fillStyle = "24px Verdana"
         ctx.fillText("Score: " + score, canvas.width -50, 10);
+        ctx.fillText("Lives: " + lives, canvas.width - 400, 10);
     }
+    //shows alert when game is lost
+    function gameOver(){
+        alert("You lost, try again! Your score was " + score + ".");
+        document.location.reload();
+    }
+    
+    function WallCollision(){
+        if (lives > 1){
+            //resets the snake to the middle when snake hits a wall
+            lives--;
+            x_pos = 10;
+            y_pos = 10;
+            x_vel = 0;
+            y_vel = 0;
+        } else {
+            //ends game if user does not have lives left
+            gameOver();
+    }
+
+    }
+    function AppleCollision(){
+        //Adds length to tail and increases score when snake eats an apple.
+        tail_length++;
+            score++;
+            //spawns a new apple in a random place on the canvas
+            apple_x = Math.floor(Math.random()*tile_count);
+            apple_y = Math.floor(Math.random()*tile_count);
+    }
+    
     function keyPush(event){
         switch(event.keyCode){
            
@@ -102,5 +132,5 @@
     }
     
         
-    
+
 </script>
