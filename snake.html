@@ -9,6 +9,7 @@
         //11/14 Evan Hsieh: cleaned up code
         //11/14 Added lives increment variation and a game win condition
         //11/14 Evan Hsieh: created appleCollision function
+        //11/16 Evan Hsieh: Minor changes to win condition, keycodes after testing
         window.onload = function(){
         canvas = document.getElementById("game");
         ctx = canvas.getContext("2d");
@@ -32,6 +33,8 @@
     var score= 0;
     var lives = 3;
 
+    var scores = [];
+
     function game_function(){
         x_pos = x_pos + x_vel;
         y_pos = y_pos + y_vel;
@@ -47,17 +50,8 @@
       
         for (var i = 0; i< trail.length; i++){
             ctx.fillRect(trail[i].x * grid_size, trail[i].y * grid_size, grid_size - 2, grid_size - 2);
-            if (trail[i].x == x_pos && trail[i].y == y_pos){
-                tail_length = 5;
-                score = 0;
-            }
         } 
-        if (score == 10 || score == 20 || score == 30 || score == 40)  {
-            lives++;
-        }else if (score == 50){ 
-            alert("Congrats! You won, and you still had " + lives + " lives left!");
-            document.location.reload();
-        }
+        
     
         trail.push({x:x_pos, y:y_pos});
         
@@ -78,8 +72,12 @@
     }
     //shows alert when game is lost
     function gameOver(){
+        scores.push(" " + score);
         alert("You lost, try again! Your score was " + score + ".");
         document.location.reload();
+        alert("Your past scores: " + scores);
+
+    
     }
     
     function WallCollision(){
@@ -98,32 +96,45 @@
     }
     function AppleCollision(){
         //Adds length to tail and increases score when snake eats an apple.
+        
         tail_length++;
             score++;
+            //if score threshold for gaining lives is met, game gives user a life. Also checks for win condition
+            if (score == 10 || score == 20 || score == 30 || score == 40)  {
+            lives++;
+            }else if (score == 50){ 
+            alert("Congrats! You won, and you still had " + lives + " lives left!");
+            document.location.reload();
+        }
             //spawns a new apple in a random place on the canvas
             apple_x = Math.floor(Math.random()*tile_count);
             apple_y = Math.floor(Math.random()*tile_count);
     }
     
     function keyPush(event){
+        
         switch(event.keyCode){
            
             case 37://left
+            case 65:
                 x_vel = -1;
                 y_vel = 0;
                 break;
 
             case 38: //up
+            case 87:
                 x_vel = 0;
                 y_vel = -1;
                 break;
             
             case 39://right
+            case 68:
                 x_vel = 1;
                 y_vel = 0;
                 break;
 
             case 40://down
+            case 83:
                 x_vel = 0;
                 y_vel = 1;
                 break;
