@@ -74,12 +74,30 @@
     function gameOver(){
         scores.push(" " + score);
         alert("You lost, try again! Your score was " + score + ".");
-        document.location.reload();
         alert("Your past scores: " + scores);
+        VarReset();
 
     
     }
-    
+    function VarReset(){
+        
+            x_pos = 10;
+            y_pos = 10;
+
+            x_vel = 0;
+            y_vel = 0;
+
+            grid_size = 20;
+            tile_count = 20;
+
+            apple_x = 15;
+            apple_y = 15;
+
+            trail = [];
+            tail_length = 5;
+            score= 0;
+            lives = 3;
+    }
     function WallCollision(){
         if (lives > 1){
             //resets the snake to the middle when snake hits a wall
@@ -103,8 +121,10 @@
             if (score == 10 || score == 20 || score == 30 || score == 40)  {
             lives++;
             }else if (score == 50){ 
+                scores.push(" " + score);
             alert("Congrats! You won, and you still had " + lives + " lives left!");
-            document.location.reload();
+            alert("Your past scores: " + scores);
+            VarReset();
         }
             //spawns a new apple in a random place on the canvas
             apple_x = Math.floor(Math.random()*tile_count);
@@ -145,3 +165,4 @@
         
 
 </script>
+
